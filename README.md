@@ -27,7 +27,7 @@ Number and name of feature: 1. Locations
 
 Estimate of time needed to complete: 90 min
 
-Start time: _____
+Start time: 4:15p
 
 Finish time: _____
 
