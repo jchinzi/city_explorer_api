@@ -23,7 +23,31 @@ Create an app that allows users to search by city and access information about t
 
 Lab 06: Node, npm, and Express
 
-Number and name of feature: ________________________________
+Number and name of feature: 1. Locations
+
+Estimate of time needed to complete: 90 min
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: _____
+
+---
+
+Number and name of feature: 2. Weather
+
+Estimate of time needed to complete: _____
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: _____
+
+---
+
+Number and name of feature: 3. Errors
 
 Estimate of time needed to complete: _____
 
