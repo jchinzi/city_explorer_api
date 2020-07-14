@@ -23,7 +23,7 @@ Start server (nodemon)
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
 -->
 
-Lab 06: Node, npm, and Express
+**Lab 06: Node, npm, and Express**
 
 Number and name of feature: 1. Locations
 
@@ -58,3 +58,51 @@ Start time: 5:52pm
 Finish time: 6:18pm
 
 Actual time needed to complete: 26min
+
+---
+**Lab 07: APIs**
+
+
+Number and name of feature: #1 Data Formatting
+
+Estimate of time needed to complete: 30min
+
+Start time: 2:07pm
+
+Finish time: 2:16pm
+
+Actual time needed to complete: 9min
+
+---
+
+Number and name of feature: ________________________________
+
+Estimate of time needed to complete: _____
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: _____
+
+
+Number and name of feature: ________________________________
+
+Estimate of time needed to complete: _____
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: _____
+
+
+Number and name of feature: ________________________________
+
+Estimate of time needed to complete: _____
+
+Start time: _____
+
+Finish time: _____
+
+Actual time needed to complete: _____
