@@ -75,15 +75,15 @@ Actual time needed to complete: 9min
 
 ---
 
-Number and name of feature: ________________________________
+Number and name of feature: #2 Locations
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 45min
 
-Start time: _____
+Start time: 2:20pm
 
-Finish time: _____
+Finish time: 2:50pm
 
-Actual time needed to complete: _____
+Actual time needed to complete: 30min
 
 
 Number and name of feature: ________________________________
