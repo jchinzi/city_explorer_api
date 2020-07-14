@@ -4,6 +4,7 @@
 
 const express = require('express'); //Server Library
 const cors = require('cors'); //'Bodyguard' - currently letting anyone talk to the server
+const superagent = require('superagent');
 require('dotenv').config(); //'Chamber of Secrets' - lets us access our .env
 
 // Use the Libraries
@@ -17,19 +18,38 @@ const PORT = process.env.PORT || 3001; //Gets the PORT var from our env
 
 //=============================Location=================================
 
-app.get('/location', (request, response) => { //backend event listener on /location route
+app.get('/location', handleLocation);
 
-  try{ //if something goes wrong in the try, code won't crash
-    let city = request.query.city; //front end sends the city that the user typed in (request object, query property)
-    let geoData = require('./data/location.json') //brings in JSON file
+function handleLocation (request, response){ //backend event listener on /location route
 
-    const obj = new Location(city, geoData) //make a new Object instance
-    response.status(200).send(obj); //send the location Object to the front end
-  } catch(error){ //if something goes wrong in the 'try', we end up here
-    console.log('ERROR', error); //Terminal Error Message
-    response.status(500).send('Sorry, something went terribly wrong'); //On Page Error Message
+  let city = request.query.city;
+  // let geoData = require('./data/location.json') //brings in JSON file
+  let url = `https://us1.locationiq.com/v1/search.php`;
+
+  let queryParameters = {
+    key: process.env.GEOCODE_API_KEY,
+    q: city,
+    format: 'json',
+    limit: 1
   }
-})
+
+  superagent.get(url)
+    .query(queryParameters)
+    .then(resultsFromSuperagent => {
+      let geoData = resultsFromSuperagent.body;
+      const obj = new Location(city, geoData);
+      response.status(200).send(obj);
+    }).catch((error) => {
+      console.log('ERROR', error);
+      response.status(500).send('Sorry, something went terribly wrong');
+    })}
+
+//   const obj = new Location(city, geoData) //make a new Object instance
+//   response.status(200).send(obj); //send the location Object to the front end
+// } catch(error){ //if something goes wrong in the 'try', we end up here
+//   console.log('ERROR', error); //Terminal Error Message
+//   response.status(500).send('Sorry, something went terribly wrong'); //On Page Error Message
+// }
 
 function Location(city, geoData){
 
@@ -55,7 +75,6 @@ app.get('/weather', (request, response) => {
   })
 
   response.status(200).send(forecastArray);
-
 })
 
 function Weather(obj) {
