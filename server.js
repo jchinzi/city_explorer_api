@@ -23,11 +23,11 @@ app.get('/location', (request, response) => { //backend event listener on /locat
     let city = request.query.city; //front end sends the city that the user typed in (request object, query property)
     let geoData = require('./data/location.json') //brings in JSON file
 
-    const obj = new Location(city, geoData)
-    response.status(200).send(obj);
-  } catch(error){
-    console.log('ERROR', error);
-    response.status(500).send('Sorry, something went terribly wrong');
+    const obj = new Location(city, geoData) //make a new Object instance
+    response.status(200).send(obj); //send the location Object to the front end
+  } catch(error){ //if something goes wrong in the 'try', we end up here
+    console.log('ERROR', error); //Terminal Error Message
+    response.status(500).send('Sorry, something went terribly wrong'); //On Page Error Message
   }
 })
 
@@ -56,7 +56,7 @@ app.get('/weather', (request, response) => {
 
 function Weather(obj) {
   this.forecast = obj.weather.description;
-  this.time = obj.datetime;
+  this.time = new Date(obj.datetime).toDateString(); //may need to switch to valid_date if API doesn't cooperate
 }
 
 //==============================Errors=================================
