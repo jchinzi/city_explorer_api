@@ -49,10 +49,10 @@ Actual time needed to complete: 38min
 
 Number and name of feature: 3. Errors
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 30min
 
-Start time: _____
+Start time: 5:52pm
 
-Finish time: _____
+Finish time: 6:18pm
 
-Actual time needed to complete: _____
+Actual time needed to complete: 26min
