@@ -37,13 +37,13 @@ Actual time needed to complete: 30min
 
 Number and name of feature: 2. Weather
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 45min
 
-Start time: _____
+Start time: 5:00pm
 
-Finish time: _____
+Finish time: 5:38pm
 
-Actual time needed to complete: _____
+Actual time needed to complete: 38min
 
 ---
 

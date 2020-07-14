@@ -7,12 +7,15 @@ const app = express();
 require('dotenv').config();
 
 const cors = require('cors');
+const { request, response } = require('express');
 
 app.use(cors());
 
 const PORT = process.env.PORT || 3001;
 
 // Routes
+
+//=============================Location=================================
 
 app.get('/location', (request, response) => {
 
@@ -25,15 +28,37 @@ app.get('/location', (request, response) => {
 })
 
 function Location(city, geoData){
+
+  console.log('City', city);
+
   this.search_query = city;
   this.formatted_query = geoData[0].display_name;
   this.latitude = geoData[0].lat;
   this.longitude = geoData[0].lon;
 }
 
+//=============================Weather=================================
 
+app.get('/weather', (request, response) => {
 
-// Check to confirm which PORT
+  let weatherData = require('./data/weather.json')
+  let forecastArray = [];
+
+  weatherData['data'].forEach(date => {
+    forecastArray.push(new Weather(date));
+  })
+
+  response.send(forecastArray);
+
+})
+
+function Weather(obj) {
+  this.forecast = obj.weather.description;
+  this.time = obj.datetime;
+} 
+
+// ====================================================================
+// Turn on Server and Confirm Port
 
 app.listen(PORT, () => {
   console.log(`listening on ${PORT}`);
