@@ -19,17 +19,19 @@ const PORT = process.env.PORT || 3001;
 
 app.get('/location', (request, response) => {
 
-  let city = request.query.city;
-  let geoData = require('./data/location.json')
+  try{
+    let city = request.query.city;
+    let geoData = require('./data/location.json')
 
-  const obj = new Location(city, geoData)
-  console.log('OBJ:', obj);
-  response.send(obj);
+    const obj = new Location(city, geoData)
+    response.status(200).send(obj);
+  } catch(error){
+    console.log('ERROR', error);
+    response.status(500).send('Sorry, something went terribly wrong');
+  }
 })
 
 function Location(city, geoData){
-
-  console.log('City', city);
 
   this.search_query = city;
   this.formatted_query = geoData[0].display_name;
@@ -48,14 +50,20 @@ app.get('/weather', (request, response) => {
     forecastArray.push(new Weather(date));
   })
 
-  response.send(forecastArray);
+  response.status(200).send(forecastArray);
 
 })
 
 function Weather(obj) {
   this.forecast = obj.weather.description;
   this.time = obj.datetime;
-} 
+}
+
+//==============================Errors=================================
+
+app.get('*', (request, response) => {
+  response.status(500).send('Sorry, something went terribly wrong');
+})
 
 // ====================================================================
 // Turn on Server and Confirm Port
