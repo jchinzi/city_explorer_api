@@ -1,33 +1,33 @@
 'use strict';
 
-const express = require('express');
+// Libraries
 
-const app = express();
+const express = require('express'); //Server Library
+const cors = require('cors'); //'Bodyguard' - currently letting anyone talk to the server
+require('dotenv').config(); //'Chamber of Secrets' - lets us access our .env
 
-require('dotenv').config();
+// Use the Libraries
+const app = express(); //Lets us use the express libraries
+app.use(cors()); //Allows ALL clients into our server
 
-const cors = require('cors');
-const { request, response } = require('express');
-
-app.use(cors());
-
-const PORT = process.env.PORT || 3001;
+// Global Variables
+const PORT = process.env.PORT || 3001; //Gets the PORT var from our env
 
 // Routes
 
 //=============================Location=================================
 
-app.get('/location', (request, response) => {
+app.get('/location', (request, response) => { //backend event listener on /location route
 
-  try{
-    let city = request.query.city;
-    let geoData = require('./data/location.json')
+  try{ //if something goes wrong in the try, code won't crash
+    let city = request.query.city; //front end sends the city that the user typed in (request object, query property)
+    let geoData = require('./data/location.json') //brings in JSON file
 
-    const obj = new Location(city, geoData)
-    response.status(200).send(obj);
-  } catch(error){
-    console.log('ERROR', error);
-    response.status(500).send('Sorry, something went terribly wrong');
+    const obj = new Location(city, geoData) //make a new Object instance
+    response.status(200).send(obj); //send the location Object to the front end
+  } catch(error){ //if something goes wrong in the 'try', we end up here
+    console.log('ERROR', error); //Terminal Error Message
+    response.status(500).send('Sorry, something went terribly wrong'); //On Page Error Message
   }
 })
 
@@ -56,7 +56,7 @@ app.get('/weather', (request, response) => {
 
 function Weather(obj) {
   this.forecast = obj.weather.description;
-  this.time = obj.datetime;
+  this.time = new Date(obj.datetime).toDateString(); //may need to switch to valid_date if API doesn't cooperate
 }
 
 //==============================Errors=================================
