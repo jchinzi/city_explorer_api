@@ -7,7 +7,9 @@
 Create an app that allows users to search by city and access information about that city, including local weather.
 
 ## Getting Started
-<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
+NPM Install of express, cors, & dotenv (npm i for quickstart)
+Create .env file (PORT=3000)
+Start server (nodemon)
 
 ## Architecture
 <!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
