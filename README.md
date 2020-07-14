@@ -86,11 +86,11 @@ Finish time: 2:50pm
 Actual time needed to complete: 30min
 
 
-Number and name of feature: ________________________________
+Number and name of feature: #3 Weather
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 45min
 
-Start time: _____
+Start time: 2:52pm
 
 Finish time: _____
 

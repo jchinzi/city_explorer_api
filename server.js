@@ -13,6 +13,7 @@ app.use(cors()); //Allows ALL clients into our server
 
 // Global Variables
 const PORT = process.env.PORT || 3001; //Gets the PORT var from our env
+const locationResponse = [];
 
 // Routes
 
@@ -20,10 +21,9 @@ const PORT = process.env.PORT || 3001; //Gets the PORT var from our env
 
 app.get('/location', handleLocation);
 
-function handleLocation (request, response){ //backend event listener on /location route
+function handleLocation (request, response){ 
 
   let city = request.query.city;
-  // let geoData = require('./data/location.json') //brings in JSON file
   let url = `https://us1.locationiq.com/v1/search.php`;
 
   let queryParameters = {
@@ -39,17 +39,11 @@ function handleLocation (request, response){ //backend event listener on /locati
       let geoData = resultsFromSuperagent.body;
       const obj = new Location(city, geoData);
       response.status(200).send(obj);
+      locationResponse.push(obj);
     }).catch((error) => {
       console.log('ERROR', error);
       response.status(500).send('Sorry, something went terribly wrong');
     })}
-
-//   const obj = new Location(city, geoData) //make a new Object instance
-//   response.status(200).send(obj); //send the location Object to the front end
-// } catch(error){ //if something goes wrong in the 'try', we end up here
-//   console.log('ERROR', error); //Terminal Error Message
-//   response.status(500).send('Sorry, something went terribly wrong'); //On Page Error Message
-// }
 
 function Location(city, geoData){
 
@@ -61,21 +55,34 @@ function Location(city, geoData){
 
 //=============================Weather=================================
 
-app.get('/weather', (request, response) => {
+app.get('/weather', handleWeather);
 
-  let weatherData = require('./data/weather.json')
-  // let forecastArray = [];
+function handleWeather (request, response){
 
-  // weatherData['data'].forEach(date => {
-  //   forecastArray.push(new Weather(date));
+  console.log('Location Array:', locationResponse);
+
+  let url = `http://api.weatherbit.io/v2.0/forecast/daily`
+
+  let queryParameters = {
+    key: process.env.WEATHER_API_KEY,
+    lat: this.latitude,
+    lon: this.longitude
+  }
+
+  superagent.get(url)
+    .query(queryParameters)
+    .then(resultsFromSuperagent => {
+      let forecastArray = resultsFromSuperagent.body.data.map(date => {
+        return new Weather(date);
+      })
+      response.status(200).send(forecastArray);
+    })
+
+  // let forecastArray = weatherData['data'].map(date => {
+  //   return new Weather(date);
   // })
 
-  let forecastArray = weatherData['data'].map(date => {
-    return new Weather(date);
-  })
-
-  response.status(200).send(forecastArray);
-})
+}
 
 function Weather(obj) {
   this.forecast = obj.weather.description;
