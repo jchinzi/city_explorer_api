@@ -44,10 +44,14 @@ function Location(city, geoData){
 app.get('/weather', (request, response) => {
 
   let weatherData = require('./data/weather.json')
-  let forecastArray = [];
+  // let forecastArray = [];
 
-  weatherData['data'].forEach(date => {
-    forecastArray.push(new Weather(date));
+  // weatherData['data'].forEach(date => {
+  //   forecastArray.push(new Weather(date));
+  // })
+
+  let forecastArray = weatherData['data'].map(date => {
+    return new Weather(date);
   })
 
   response.status(200).send(forecastArray);
