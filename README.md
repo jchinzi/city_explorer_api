@@ -92,9 +92,9 @@ Estimate of time needed to complete: 45min
 
 Start time: 2:52pm
 
-Finish time: _____
+Finish time: 4:09pm
 
-Actual time needed to complete: _____
+Actual time needed to complete: 77min (including a technical snafu with my router)
 
 
 Number and name of feature: ________________________________

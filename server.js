@@ -13,7 +13,6 @@ app.use(cors()); //Allows ALL clients into our server
 
 // Global Variables
 const PORT = process.env.PORT || 3001; //Gets the PORT var from our env
-const locationResponse = [];
 
 // Routes
 
@@ -39,7 +38,6 @@ function handleLocation (request, response){
       let geoData = resultsFromSuperagent.body;
       const obj = new Location(city, geoData);
       response.status(200).send(obj);
-      locationResponse.push(obj);
     }).catch((error) => {
       console.log('ERROR', error);
       response.status(500).send('Sorry, something went terribly wrong');
@@ -59,14 +57,12 @@ app.get('/weather', handleWeather);
 
 function handleWeather (request, response){
 
-  console.log('Location Array:', locationResponse);
-
   let url = `http://api.weatherbit.io/v2.0/forecast/daily`
 
   let queryParameters = {
     key: process.env.WEATHER_API_KEY,
-    lat: this.latitude,
-    lon: this.longitude
+    lat: request.query.latitude,
+    lon: request.query.longitude
   }
 
   superagent.get(url)
