@@ -97,12 +97,12 @@ Finish time: 4:09pm
 Actual time needed to complete: 77min (including a technical snafu with my router)
 
 
-Number and name of feature: ________________________________
+Number and name of feature: #4 Trails
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: 45min
 
-Start time: _____
+Start time: 4:55pm
 
-Finish time: _____
+Finish time: 6:04pm
 
-Actual time needed to complete: _____
+Actual time needed to complete: 69min
