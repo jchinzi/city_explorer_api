@@ -41,7 +41,8 @@ function handleLocation (request, response){
     }).catch((error) => {
       console.log('ERROR', error);
       response.status(500).send('Sorry, something went terribly wrong');
-    })}
+    })
+}
 
 function Location(city, geoData){
 
@@ -62,7 +63,8 @@ function handleWeather (request, response){
   let queryParameters = {
     key: process.env.WEATHER_API_KEY,
     lat: request.query.latitude,
-    lon: request.query.longitude
+    lon: request.query.longitude,
+    days: 8
   }
 
   superagent.get(url)
@@ -72,17 +74,56 @@ function handleWeather (request, response){
         return new Weather(date);
       })
       response.status(200).send(forecastArray);
+    }).catch((error) => {
+      console.log('ERROR', error);
+      response.status(500).send('Sorry, something went terribly wrong');
     })
-
-  // let forecastArray = weatherData['data'].map(date => {
-  //   return new Weather(date);
-  // })
-
 }
 
 function Weather(obj) {
   this.forecast = obj.weather.description;
-  this.time = new Date(obj.datetime).toDateString(); //may need to switch to valid_date if API doesn't cooperate
+  this.time = new Date(obj.datetime).toDateString();
+}
+
+//=============================Weather=================================
+
+app.get('/trails', handleTrails);
+
+function handleTrails (request, response){
+
+  let url = `https://www.hikingproject.com/data/get-trails`
+
+  let queryParameters = {
+    key: process.env.TRAIL_API_KEY,
+    lat: request.query.latitude,
+    lon: request.query.longitude,
+    maxResults: 10
+  }
+
+  superagent.get(url)
+    .query(queryParameters)
+    .then(resultsFromSuperagent => {
+      let trailArray = resultsFromSuperagent.body.trails.map(route => {
+        return new Trail(route);
+      })
+      response.status(200).send(trailArray);
+    }).catch((error) => {
+      console.log('ERROR', error);
+      response.status(500).send('Sorry, something went terribly wrong');
+    })
+}
+
+function Trail(obj) {
+  this.name = obj.name;
+  this.location = obj.location;
+  this.length = obj.length;
+  this.stars = obj.stars;
+  this.star_votes = obj.starVotes;
+  this.summary = obj.summary;
+  this.trail_url = obj.url;
+  this.conditions = obj.conditionDetails;
+  this.condition_date = obj.conditionDate.substring(0,10);
+  this.condition_time = obj.conditionDate.substring(11,19);
 }
 
 //==============================Errors=================================
