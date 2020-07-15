@@ -5,20 +5,29 @@
 const express = require('express'); //Server Library
 const cors = require('cors'); //'Bodyguard' - currently letting anyone talk to the server
 const superagent = require('superagent');
+const pg = require('pg');
 require('dotenv').config(); //'Chamber of Secrets' - lets us access our .env
 
 // Use the Libraries
 const app = express(); //Lets us use the express libraries
+
 app.use(cors()); //Allows ALL clients into our server
+
+const client = new pg.Client(process.env.DATABASE_URL);
+client.on('error', err => {
+  console.log('ERROR', err);
+});
 
 // Global Variables
 const PORT = process.env.PORT || 3001; //Gets the PORT var from our env
 
 // Routes
 
-//=============================Location=================================
-
 app.get('/location', handleLocation);
+app.get('/weather', handleWeather);
+app.get('/trails', handleTrails);
+
+//=============================Location=================================
 
 function handleLocation (request, response){ 
 
@@ -54,8 +63,6 @@ function Location(city, geoData){
 
 //=============================Weather=================================
 
-app.get('/weather', handleWeather);
-
 function handleWeather (request, response){
 
   let url = `http://api.weatherbit.io/v2.0/forecast/daily`
@@ -86,8 +93,6 @@ function Weather(obj) {
 }
 
 //=============================Weather=================================
-
-app.get('/trails', handleTrails);
 
 function handleTrails (request, response){
 
@@ -135,6 +140,8 @@ app.get('*', (request, response) => {
 // ====================================================================
 // Turn on Server and Confirm Port
 
-app.listen(PORT, () => {
-  console.log(`listening on ${PORT}`);
-})
+client.connect()
+  .then(() => {
+    app.listen(PORT, () => console.log(`listening on ${PORT}`));
+  }).catch(err => console.log('ERROR', err));
+
