@@ -23,13 +23,34 @@ const PORT = process.env.PORT || 3001; //Gets the PORT var from our env
 
 // Routes
 
-app.get('/location', handleLocation);
+app.get('/location', checkTable);
 app.get('/weather', handleWeather);
 app.get('/trails', handleTrails);
+app.get('/table', showData);
 
-//=============================Location=================================
+//=============================Location Functions=================================
 
-function handleLocation (request, response){ 
+function checkTable (request, response){
+  let city = request.query.city;
+  let sql = 'SELECT * FROM locations;';
+  client.query(sql)
+    .then(resultsFromPostgres => {
+      let allPlaces = resultsFromPostgres.rows;
+      let requestedPlace = [];
+      allPlaces.forEach(locale => {
+        if (locale.city === city){
+          console.log('Pulling from database', locale);
+          requestedPlace.push(locale);
+        }
+      })
+      if (requestedPlace.length===0){
+        handleLocation(request, response);
+      } else response.status(200).send(requestedPlace[0])
+    }).catch(err => console.log(err));
+}
+
+//IF city is not in the table, use the API and add new data to the table
+function handleLocation (request, response){
 
   let city = request.query.city;
   let url = `https://us1.locationiq.com/v1/search.php`;
@@ -47,6 +68,18 @@ function handleLocation (request, response){
       let geoData = resultsFromSuperagent.body;
       const obj = new Location(city, geoData);
       response.status(200).send(obj);
+
+      // Add data to the 'location' table
+      let sql = 'INSERT INTO locations (city, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4) RETURNING id;';
+      let safeValues = [obj.search_query, obj.formatted_query, obj.latitude, obj.longitude];
+
+      client.query(sql, safeValues)
+        .then(resultsFromPostgres => {
+          let id = resultsFromPostgres.rows;
+          console.log('id', id)
+        })
+
+      // Catch Errors
     }).catch((error) => {
       console.log('ERROR', error);
       response.status(500).send('Sorry, something went terribly wrong');
@@ -129,6 +162,17 @@ function Trail(obj) {
   this.conditions = obj.conditionDetails;
   this.condition_date = obj.conditionDate.substring(0,10);
   this.condition_time = obj.conditionDate.substring(11,19);
+}
+
+//=============================Data Visibility=================================
+
+function showData(request, response){
+  let sql = 'SELECT * FROM locations;';
+  client.query(sql)
+    .then(resultsFromPostgres => {
+      let places = resultsFromPostgres.rows;
+      response.send(places);
+    }).catch(err => console.log(err));
 }
 
 //==============================Errors=================================

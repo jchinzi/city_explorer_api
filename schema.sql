@@ -8,3 +8,6 @@ CREATE TABLE locations (
   longitude VARCHAR(255)
 );
 
+-- INSERT INTO locations (city, formatted_query, latitude, longitude) VALUES ('Lynnwood', 'Lynnwood, Snohomish County, Washington, USA', '47.8278656', '-122.3053932');
+
+-- SELECT * FROM locations;
