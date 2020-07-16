@@ -106,3 +106,40 @@ Start time: 4:55pm
 Finish time: 6:04pm
 
 Actual time needed to complete: 69min
+
+---
+**Lab 08: Persistence with a SQL Database**
+
+
+Number and name of feature: #1 Database
+
+Estimate of time needed to complete: 45min
+
+Start time: 2:42pm
+
+Finish time: 3:30
+
+Actual time needed to complete: 48min
+
+---
+
+Number and name of feature: #2 Server
+
+Estimate of time needed to complete: 2hrs
+
+Start time: 3:36pm
+
+Finish time: 5:56pm
+
+Actual time needed to complete: 2hrs 20min
+
+
+Number and name of feature: #3 Deploy
+
+Estimate of time needed to complete: 45min
+
+Start time: 
+
+Finish time: 
+
+Actual time needed to complete: 

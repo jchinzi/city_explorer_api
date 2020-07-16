@@ -5,22 +5,52 @@
 const express = require('express'); //Server Library
 const cors = require('cors'); //'Bodyguard' - currently letting anyone talk to the server
 const superagent = require('superagent');
+const pg = require('pg');
 require('dotenv').config(); //'Chamber of Secrets' - lets us access our .env
 
 // Use the Libraries
 const app = express(); //Lets us use the express libraries
+
 app.use(cors()); //Allows ALL clients into our server
+
+const client = new pg.Client(process.env.DATABASE_URL);
+client.on('error', err => {
+  console.log('ERROR', err);
+});
 
 // Global Variables
 const PORT = process.env.PORT || 3001; //Gets the PORT var from our env
 
 // Routes
 
-//=============================Location=================================
+app.get('/location', checkTable);
+app.get('/weather', handleWeather);
+app.get('/trails', handleTrails);
+app.get('/table', showData);
 
-app.get('/location', handleLocation);
+//=============================Location Functions=================================
 
-function handleLocation (request, response){ 
+function checkTable (request, response){
+  let city = request.query.city;
+  let sql = 'SELECT * FROM locations;';
+  client.query(sql)
+    .then(resultsFromPostgres => {
+      let allPlaces = resultsFromPostgres.rows;
+      let requestedPlace = [];
+      allPlaces.forEach(locale => {
+        if (locale.city === city){
+          console.log('Pulling from database', locale);
+          requestedPlace.push(locale);
+        }
+      })
+      if (requestedPlace.length===0){
+        handleLocation(request, response);
+      } else response.status(200).send(requestedPlace[0])
+    }).catch(err => console.log(err));
+}
+
+//IF city is not in the table, use the API and add new data to the table
+function handleLocation (request, response){
 
   let city = request.query.city;
   let url = `https://us1.locationiq.com/v1/search.php`;
@@ -38,6 +68,18 @@ function handleLocation (request, response){
       let geoData = resultsFromSuperagent.body;
       const obj = new Location(city, geoData);
       response.status(200).send(obj);
+
+      // Add data to the 'location' table
+      let sql = 'INSERT INTO locations (city, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4) RETURNING id;';
+      let safeValues = [obj.search_query, obj.formatted_query, obj.latitude, obj.longitude];
+
+      client.query(sql, safeValues)
+        .then(resultsFromPostgres => {
+          let id = resultsFromPostgres.rows;
+          console.log('id', id)
+        })
+
+      // Catch Errors
     }).catch((error) => {
       console.log('ERROR', error);
       response.status(500).send('Sorry, something went terribly wrong');
@@ -53,8 +95,6 @@ function Location(city, geoData){
 }
 
 //=============================Weather=================================
-
-app.get('/weather', handleWeather);
 
 function handleWeather (request, response){
 
@@ -86,8 +126,6 @@ function Weather(obj) {
 }
 
 //=============================Weather=================================
-
-app.get('/trails', handleTrails);
 
 function handleTrails (request, response){
 
@@ -126,6 +164,17 @@ function Trail(obj) {
   this.condition_time = obj.conditionDate.substring(11,19);
 }
 
+//=============================Data Visibility=================================
+
+function showData(request, response){
+  let sql = 'SELECT * FROM locations;';
+  client.query(sql)
+    .then(resultsFromPostgres => {
+      let places = resultsFromPostgres.rows;
+      response.send(places);
+    }).catch(err => console.log(err));
+}
+
 //==============================Errors=================================
 
 app.get('*', (request, response) => {
@@ -135,6 +184,8 @@ app.get('*', (request, response) => {
 // ====================================================================
 // Turn on Server and Confirm Port
 
-app.listen(PORT, () => {
-  console.log(`listening on ${PORT}`);
-})
+client.connect()
+  .then(() => {
+    app.listen(PORT, () => console.log(`listening on ${PORT}`));
+  }).catch(err => console.log('ERROR', err));
+
