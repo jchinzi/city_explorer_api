@@ -133,6 +133,7 @@ Finish time: 5:56pm
 
 Actual time needed to complete: 2hrs 20min
 
+---
 
 Number and name of feature: #3 Deploy
 
@@ -143,3 +144,43 @@ Start time: 6:07pm
 Finish time: 6:12pm
 
 Actual time needed to complete: 5min
+
+---
+**Lab: 09 - SQL continued**
+
+
+Number and name of feature: #1 Movies
+
+Estimate of time needed to complete: 45min
+
+Start time: 2:40pm
+
+Finish time: 4:24pm
+
+Actual time needed to complete: 1hr 15min
+
+---
+
+Number and name of feature: #2 Yelp
+
+Estimate of time needed to complete: 
+
+Start time: 
+
+Finish time: 
+
+Actual time needed to complete: 
+
+---
+
+Number and name of feature: #3 Pagination
+
+Estimate of time needed to complete: 
+
+Start time: 
+
+Finish time: 
+
+Actual time needed to complete: 
+
+---
