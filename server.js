@@ -32,19 +32,25 @@ app.get('/table', showData);
 
 function checkTable (request, response){
   let city = request.query.city;
-  let sql = 'SELECT * FROM locations;';
-  client.query(sql)
+  let sql = 'SELECT * FROM locations WHERE search_query=$1;';
+  let safeValues = [city];
+
+  client.query(sql, safeValues)
     .then(resultsFromPostgres => {
-      let allPlaces = resultsFromPostgres.rows;
-      let requestedPlace = [];
-      allPlaces.forEach(locale => {
-        if (locale.city === city){
-          requestedPlace.push(locale);
-        }
-      })
-      if (requestedPlace.length===0){
-        handleLocation(request, response);
-      } else response.status(200).send(requestedPlace[0])
+      // let allPlaces = resultsFromPostgres.rows;
+      // let requestedPlace = [];
+      // allPlaces.forEach(locale => {
+      //   if (locale.city === city){
+      //     requestedPlace.push(locale);
+      //   }
+      // })
+      // if (requestedPlace.length===0){
+      //   handleLocation(request, response);
+      // } else response.status(200).send(requestedPlace[0])
+
+      if (resultsFromPostgres.rowCount){
+        response.status(200).send(resultsFromPostgres.rows[0]);
+      } else handleLocation(request, response);
     }).catch(err => console.log(err));
 }
 
@@ -69,7 +75,7 @@ function handleLocation (request, response){
       response.status(200).send(obj);
 
       // Add data to the 'location' table
-      let sql = 'INSERT INTO locations (city, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4) RETURNING id;';
+      let sql = 'INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES ($1, $2, $3, $4) RETURNING id;';
       let safeValues = [obj.search_query, obj.formatted_query, obj.latitude, obj.longitude];
 
       client.query(sql, safeValues)
