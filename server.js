@@ -39,7 +39,6 @@ function checkTable (request, response){
       let requestedPlace = [];
       allPlaces.forEach(locale => {
         if (locale.city === city){
-          console.log('Pulling from database', locale);
           requestedPlace.push(locale);
         }
       })
