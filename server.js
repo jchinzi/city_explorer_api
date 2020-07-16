@@ -26,6 +26,9 @@ const PORT = process.env.PORT || 3001; //Gets the PORT var from our env
 app.get('/location', checkTable);
 app.get('/weather', handleWeather);
 app.get('/trails', handleTrails);
+app.get('/movies', handleMovies);
+
+// Not for the Front End Route
 app.get('/table', showData);
 
 //=============================Location Functions=================================
@@ -37,17 +40,6 @@ function checkTable (request, response){
 
   client.query(sql, safeValues)
     .then(resultsFromPostgres => {
-      // let allPlaces = resultsFromPostgres.rows;
-      // let requestedPlace = [];
-      // allPlaces.forEach(locale => {
-      //   if (locale.city === city){
-      //     requestedPlace.push(locale);
-      //   }
-      // })
-      // if (requestedPlace.length===0){
-      //   handleLocation(request, response);
-      // } else response.status(200).send(requestedPlace[0])
-
       if (resultsFromPostgres.rowCount){
         response.status(200).send(resultsFromPostgres.rows[0]);
       } else handleLocation(request, response);
@@ -99,7 +91,7 @@ function Location(city, geoData){
   this.longitude = geoData[0].lon;
 }
 
-//=============================Weather=================================
+//=============================Weather Function=================================
 
 function handleWeather (request, response){
 
@@ -130,7 +122,7 @@ function Weather(obj) {
   this.time = new Date(obj.datetime).toDateString();
 }
 
-//=============================Weather=================================
+//=============================Trails Function=================================
 
 function handleTrails (request, response){
 
@@ -168,6 +160,45 @@ function Trail(obj) {
   this.condition_date = obj.conditionDate.substring(0,10);
   this.condition_time = obj.conditionDate.substring(11,19);
 }
+
+//=============================Movies Function=================================
+
+function handleMovies(request, response){
+
+  let url = `http://api.themoviedb.org/3/search/movie`
+
+  let queryParameters = {
+    api_key: process.env.MOVIE_API_KEY,
+    query: request.query.search_query,
+    page: 1
+  }
+
+  superagent.get(url)
+    .query(queryParameters)
+    .then(resultsFromSuperagent => {
+      let movieArray = resultsFromSuperagent.body.results.map(film => {
+        return new Movie(film);
+      })
+      response.status(200).send(movieArray);
+    }).catch((error) => {
+      console.log('ERROR', error);
+      response.status(500).send('Sorry, something went terribly wrong');
+    })
+}
+
+function Movie(obj) {
+  this.title = obj.title;
+  this.overview = obj.overview;
+  this.average_votes = obj.vote_average;
+  this.total_votes = obj.vote_count;
+  this.image_url = `https://image.tmdb.org/t/p/w500${obj.poster_path}`;
+  this.popularity = obj.popularity;
+  this.released_on = obj.release_date;
+}
+
+//=============================Yelp Function=================================
+
+
 
 //=============================Data Visibility=================================
 
