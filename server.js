@@ -27,6 +27,7 @@ app.get('/location', checkTable);
 app.get('/weather', handleWeather);
 app.get('/trails', handleTrails);
 app.get('/movies', handleMovies);
+app.get('/yelp', handleYelp);
 
 // Not for the Front End Route
 app.get('/table', showData);
@@ -176,9 +177,7 @@ function handleMovies(request, response){
   superagent.get(url)
     .query(queryParameters)
     .then(resultsFromSuperagent => {
-      let movieArray = resultsFromSuperagent.body.results.map(film => {
-        return new Movie(film);
-      })
+      let movieArray = resultsFromSuperagent.body.results.map(film => new Movie(film));
       response.status(200).send(movieArray);
     }).catch((error) => {
       console.log('ERROR', error);
@@ -198,7 +197,35 @@ function Movie(obj) {
 
 //=============================Yelp Function=================================
 
+function handleYelp(request, response){
 
+  let url = 'https://api.yelp.com/v3/businesses/search'
+
+  let queryParameters = {
+    latitude: request.query.latitude,
+    longitude: request.query.longitude,
+    term: 'restaurant'
+  }
+
+  superagent.get(url)
+    .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
+    .query(queryParameters)
+    .then(resultsFromSuperagent => {
+      let nomArray = resultsFromSuperagent.body.businesses.map(eatery => new Restaurant(eatery));
+      response.status(200).send(nomArray);
+    }).catch((error) => {
+      console.log('ERROR', error);
+      response.status(500).send('Sorry, something went terribly wrong');
+    })
+}
+
+function Restaurant(obj) {
+  this.name = obj.name;
+  this.image_url = obj.image_url;
+  this.price = obj.price;
+  this.rating = obj.rating;
+  this.url = obj.url;
+}
 
 //=============================Data Visibility=================================
 
