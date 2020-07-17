@@ -163,13 +163,13 @@ Actual time needed to complete: 1hr 15min
 
 Number and name of feature: #2 Yelp
 
-Estimate of time needed to complete: 
+Estimate of time needed to complete: 60min
 
-Start time: 
+Start time: 4:42pm
 
-Finish time: 
+Finish time: 5:34pm
 
-Actual time needed to complete: 
+Actual time needed to complete: 52min
 
 ---
 
