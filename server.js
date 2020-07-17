@@ -201,10 +201,16 @@ function handleYelp(request, response){
 
   let url = 'https://api.yelp.com/v3/businesses/search'
 
+  const page = request.query.page || 1;
+  const numPerPage = 5;
+  const start = ((page - 1) * numPerPage);
+
   let queryParameters = {
     latitude: request.query.latitude,
     longitude: request.query.longitude,
-    term: 'restaurant'
+    term: 'restaurant',
+    limit: numPerPage,
+    offset: start
   }
 
   superagent.get(url)

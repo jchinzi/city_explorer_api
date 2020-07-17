@@ -175,12 +175,12 @@ Actual time needed to complete: 52min
 
 Number and name of feature: #3 Pagination
 
-Estimate of time needed to complete: 
+Estimate of time needed to complete: 30min
 
-Start time: 
+Start time: 5:43pm
 
-Finish time: 
+Finish time: 6:04pm
 
-Actual time needed to complete: 
+Actual time needed to complete: 21min
 
 ---
